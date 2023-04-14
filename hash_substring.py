@@ -1,55 +1,43 @@
 # python3
 
 def read_input():
-    # this function needs to acquire input both from keyboard and file
-    # as before, use capital i (input from keyboard) and capital f (input from file) to choose which input type will follow
-    
-    input_type = input()
-    
-    if input_type == "I":
-        pattern = input().rstrip()
-        text = input().rstrip()
-    elif input_type == "F":
-        with open("input.txt") as f:
+    # this function acquires input both from keyboard and file
+    choice = input().rstrip()
+    if choice == "F":
+        with open('input.txt', 'r') as f:
             pattern = f.readline().rstrip()
             text = f.readline().rstrip()
-    
-    # return both lines in one return
+    elif choice == "I":
+        pattern = input().rstrip()
+        text = input().rstrip()
     return pattern, text
 
 def print_occurrences(output):
-    # this function should control output, it doesn't need any return
+    # this function prints the positions of the occurrences
     print(' '.join(map(str, output)))
 
 def get_occurrences(pattern, text):
-    # this function should find the occurrences using Rabin Karp algorithm 
-    
-    # compute some constants
-    prime = 1000000007
-    multiplier = 263
-    
-    # compute hash value of pattern and first window of text
-    pattern_hash = 0
-    window_hash = 0
-    for i in range(len(pattern)):
-        pattern_hash = (pattern_hash * multiplier + ord(pattern[i])) % prime
-        window_hash = (window_hash * multiplier + ord(text[i])) % prime
-    
-    # compute (multiplier^len(pattern)) % prime
-    multiplier_power = pow(multiplier, len(pattern), prime)
-    
-    occurrences = []
-    
-    # slide the window and compare hash values
-    for i in range(len(text) - len(pattern) + 1):
-        if pattern_hash == window_hash and text[i:i+len(pattern)] == pattern:
-            occurrences.append(i)
-        
-        # compute hash value for next window
-        if i < len(text) - len(pattern):
-            window_hash = (multiplier * (window_hash - ord(text[i]) * multiplier_power) + ord(text[i+len(pattern)])) % prime
-    
-    return occurrences
+    # this function finds the occurrences using Rabin-Karp algorithm
+    p = 1000000007  # prime number for hashing
+    x = 263  # base for hashing
+    m = len(pattern)
+    n = len(text)
+    results = []
+    if n < m:
+        return results
+    p_hash = 0
+    t_hash = 0
+    h = pow(x, m - 1, p)  # precompute h
+    for i in range(m):
+        p_hash = (x * p_hash + ord(pattern[i])) % p
+        t_hash = (x * t_hash + ord(text[i])) % p
+    if p_hash == t_hash and text[:m] == pattern:
+        results.append(0)
+    for i in range(1, n - m + 1):
+        t_hash = (x * (t_hash - ord(text[i - 1]) * h) + ord(text[i + m - 1])) % p
+        if p_hash == t_hash and text[i:i + m] == pattern:
+            results.append(i)
+    return results
 
 # this part launches the functions
 if __name__ == '__main__':
