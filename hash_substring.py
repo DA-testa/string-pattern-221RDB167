@@ -4,7 +4,7 @@ def read_input():
     # this function acquires input both from keyboard and file
     choice = input().rstrip()
     if choice == "F":
-        with open('06.txt', 'r') as f:
+        with open('/tests/'+'06', 'r') as f:
             pattern = f.readline().rstrip()
             text = f.readline().rstrip()
     elif choice == "I":
