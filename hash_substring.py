@@ -2,15 +2,17 @@
 
 def read_input():
     # this function acquires input both from keyboard and file
+    text = input().rstrip()
     if text.startswith("I"):
-            pattern = input().rstrip()
-            text = input().rstrip()
-        if text.startswith("F"):
-            file_name = open('./tests/'+'06', 'r')
-            dataLasa = file_name.read()
-            splitedData=dataLasa.split()
-            pattern = splitedData[0].rstrip()
-            text =splitedData[1].rstrip()
+        pattern = input().rstrip()
+        text = input().rstrip()
+    elif text.startswith("F"):
+        file_name = open('./tests/'+'06', 'r')
+        dataLasa = file_name.read()
+        splitedData=dataLasa.split()
+        pattern = splitedData[0].rstrip()
+        text = splitedData[1].rstrip()
+        file_name.close()
     return pattern, text
 
 def print_occurrences(output):
